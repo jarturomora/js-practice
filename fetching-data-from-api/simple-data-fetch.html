@@ -1,0 +1,56 @@
+<script>
+    const fetchData = (async () => {
+          const response = await fetch('https://api.coindesk.com/v1/bpi/currentprice.json')
+      return await response.json()
+      })()
+  </script>
+
+  <style>
+      .tomatoTitle {
+          color:#fff;
+          background-color:#ff6347;
+          border-radius: 25px;
+      }
+
+      pre {
+      background: #000;
+      border: 1px solid #ddd;
+      color: #74eb34;
+      page-break-inside: avoid;
+      font-family: monospace;
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 1.6em;
+      max-width: 100%;
+      overflow: auto;
+      padding: 1em 1.5em;
+      display: block;
+      word-wrap: break-word;
+  }
+  </style>
+
+  {#await fetchData}
+      <div>
+          "loading"
+      </div>
+  {:then data}
+      <h1>
+          Current Bitcoin Prices from CoinDesk
+      </h1>
+      <p>
+      {data.disclaimer}
+      </p>
+      <ul>
+          <li>BTC price in USD: : $ {data.bpi.USD.rate}</li>
+          <li>BTC price in GPB: : &pound; {data.bpi.GBP.rate}</li>
+          <li>BTC price in EUR: : {data.bpi.EUR.rate} &euro;</li>
+      </ul>
+      <p>Latest update: {data.time.updated}</p>
+      <hr />
+      <h1 class="tomatoTitle">Raw JSON data fetched from the API</h1>
+      <pre>
+          {JSON.stringify(data, null, 2)}
+      </pre>
+  {:catch error}
+      <p>An error occurred! {JSON.stringify(error, null, 2)}</p>
+  {/await}
